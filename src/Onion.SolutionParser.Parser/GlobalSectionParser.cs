@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Onion.SolutionParser.Parser.Model;
 
@@ -34,7 +35,14 @@ namespace Onion.SolutionParser.Parser
             {
                 var key = entryMatch.Groups["key"].Value.Trim();
                 var value = entryMatch.Groups["value"].Value.Trim();
-                section.Entries.Add(key, value);
+                if (section.Entries.ContainsKey(key))
+                {
+                    Console.Error.WriteLine("WARNING: Skipping duplicate entry in GlobalSection for " + key);
+                }
+                else
+                {
+                    section.Entries.Add(key, value);
+                }
                 entryMatch = entryMatch.NextMatch();
             }
         }
